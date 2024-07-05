@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -18,9 +22,27 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": [
+        "./*"
+      ]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "app/(pages)/admin/categories/form/layout.jsx",
+    "app/(pages)/admin/categories/form/page.jsx",
+    "app/(pages)/admin/categories/page.jsx",
+    "app/(pages)/admin/categories/form/context/CategoryFormContext.jsx",
+    "lib/firebase/category/write.jsx",
+    "lib/firebase.jsx",
+    "lib/firebase/category/read.jsx",
+    "lib/firebase/author/write.jsx",
+    "lib/firebase/author/read.jsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
