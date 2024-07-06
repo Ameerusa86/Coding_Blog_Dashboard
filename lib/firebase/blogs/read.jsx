@@ -34,3 +34,4 @@ export function useBlogs() {
 export const getBlog = async (id) => {
   return await getDoc(doc(db, `blogs/${id}`));
 };
+m;

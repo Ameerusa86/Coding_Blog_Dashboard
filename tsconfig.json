@@ -40,7 +40,8 @@
     "lib/firebase.jsx",
     "lib/firebase/category/read.jsx",
     "lib/firebase/author/write.jsx",
-    "lib/firebase/author/read.jsx"
+    "lib/firebase/author/read.jsx",
+    ".next/types/app/blogs/[blogId]/page.tsx"
   ],
   "exclude": [
     "node_modules"

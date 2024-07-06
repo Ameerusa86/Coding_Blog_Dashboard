@@ -232,7 +232,7 @@ function SelectCategoryField({ handleData }) {
   );
 }
 
-function SelectAuthorField({ handleData }) {
+function SelectAuthorField({ id, handleData }) {
   const { authors, isLoading, error } = useAuthors();
 
   if (isLoading) {
@@ -260,7 +260,7 @@ function SelectAuthorField({ handleData }) {
         <option value="">Select an Author</option>
         {authors &&
           authors.map((author) => (
-            <option key={author.id} value={author.id}>
+            <option key={author.id} value={author.name}>
               {author.name}
             </option>
           ))}

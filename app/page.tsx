@@ -1,7 +1,9 @@
+import BlogsListView from "@/components/BlogsListView";
+
 export default function Home() {
   return (
     <main>
-      <h1>Coding Blog</h1>
+      <BlogsListView />
     </main>
   );
 }
