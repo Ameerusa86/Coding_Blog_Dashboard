@@ -51,41 +51,22 @@ pnpm install
 bun install
 ```
 
-## Development
+### Running the app
 
+```bash
 # Using npm
-
 npm run dev
 
 # Using yarn
-
 yarn dev
 
 # Using pnpm
-
 pnpm dev
 
 # Using bun
-
 bun dev
+```
 
-# Building for Production
-
-# Using npm
-
-npm run build
-
-# Using yarn
-
-yarn build
-
-# Using pnpm
-
-pnpm build
-
-# Using bun
-
-bun build
 
 # Contributing
 
@@ -99,13 +80,3 @@ bun build
 - Push to the branch (git push origin feature-branch).
 - Open a pull request.
 
-# Technologies Used
-
-- Next.js
-- Tailwind CSS
-- Shadcn/ui
-- Recharts
-- Lucide React
-- React Hook Form
-- Zod
-- Next Themes
