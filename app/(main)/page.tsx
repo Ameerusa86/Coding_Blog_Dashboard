@@ -3,7 +3,7 @@
 import { useState, useEffect, use } from "react";
 import DashboardCard from "@/components/dashboard/DashboardCard";
 import PostsTable from "@/components/posts/PostsTable";
-import AnalyticsChart from "@/components/dashboard/AnalyticsChart";
+// import AnalyticsChart from "@/components/dashboard/AnalyticsChart";
 import { Folder, MessageCircle, Newspaper, User } from "lucide-react";
 import fetchBlogCount from "@/app/api/blog/fetchBlogCount";
 import Link from "next/link";
