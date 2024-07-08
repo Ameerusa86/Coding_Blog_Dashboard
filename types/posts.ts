@@ -1,13 +1,14 @@
-// src/types/posts.ts
 export interface Post {
   id: string;
   title: string;
-  description: string;
+  body: string;
   author: string;
-  category: string;
-  technologies: string[];
-  githubLink: string;
   date: string;
-  image: string;
-  createdAt: string;
+  comments: PostComment[];
+}
+
+export interface PostComment {
+  id: string;
+  text: string;
+  username: string;
 }
