@@ -9,11 +9,30 @@ import fetchBlogCount from "@/app/api/blog/fetchBlogCount";
 import Link from "next/link";
 import fetchCategoryCount from "../api/category/fetchCategoryCount";
 import CategoriesTable from "@/components/categories/CategoriesTable";
+import { useRouter } from "next/navigation";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/lib/firebase";
 
 export default function Home() {
   const [blogCount, setBlogCount] = useState<number>(0);
   const [categoryCount, setCategoryCount] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setLoggedIn(true);
+        router.push("/"); // Redirect to dashboard if user is logged in
+      } else {
+        setLoggedIn(false);
+        router.push("/auth"); // Redirect to login page if user is not logged in
+      }
+    });
+
+    return () => unsubscribe();
+  }, [router]);
 
   useEffect(() => {
     const getBlogCount = async () => {
