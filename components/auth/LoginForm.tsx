@@ -21,7 +21,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import {
+  fetchSignInMethodsForEmail,
+  GoogleAuthProvider,
+  linkWithCredential,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+} from "firebase/auth";
 import { auth, googleProvider, githubProvider } from "../../lib/firebase";
 import { FaGoogle, FaGithub } from "react-icons/fa";
 import { Toaster, toast } from "react-hot-toast";
@@ -61,13 +67,56 @@ const LoginForm = () => {
     }
   };
 
-  const handleGoogleSignIn = async () => {
+  // const handleGoogleSignIn = async () => {
+  //   try {
+  //     await signInWithPopup(auth, googleProvider);
+  //     router.push("/");
+  //   } catch (error) {
+  //     console.error("Error signing in with Google: ", error);
+  //     toast.error("Error signing in with Google. Please try again.");
+  //   }
+  // };
+
+  const handleGoogleLogin = async () => {
     try {
-      await signInWithPopup(auth, googleProvider);
-      router.push("/");
+      const result = await signInWithPopup(auth, googleProvider);
+      router.push("/"); // Redirect to the dashboard after successful login
     } catch (error) {
-      console.error("Error signing in with Google: ", error);
-      toast.error("Error signing in with Google. Please try again.");
+      if (
+        (error as any).code === "auth/account-exists-with-different-credential"
+      ) {
+        const email = (error as any).customData.email;
+        const pendingCred = GoogleAuthProvider.credentialFromError(
+          error as any
+        );
+
+        const signInMethods = await fetchSignInMethodsForEmail(auth, email);
+        if (signInMethods.length > 0) {
+          // Existing sign-in method found, handle linking accounts here
+          const existingProvider = signInMethods[0]; // e.g., "google.com", "password", etc.
+
+          if (existingProvider === "password") {
+            // Handle linking accounts with password
+            // Prompt the user to login with their existing account to link
+            const password = prompt(`Please enter your password for ${email}`);
+            const credential = GoogleAuthProvider.credential(email, password);
+            try {
+              await linkWithCredential(auth.currentUser, credential);
+              // Re-attempt signing in with the original credential
+              await signInWithPopup(auth, pendingCred);
+              router.push("/");
+            } catch (linkError) {
+              console.error("Error linking account:", linkError);
+            }
+          } else {
+            // Other providers like Google, GitHub, etc.
+            // Prompt the user to log in with the existing provider to link accounts
+            alert(`Please log in using ${existingProvider} to link accounts.`);
+          }
+        }
+      } else {
+        console.error("Google login failed:", error);
+      }
     }
   };
 
@@ -149,7 +198,7 @@ const LoginForm = () => {
           <div className="flex justify-between space-x-4 mt-4">
             <Button
               className="flex items-center justify-center w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 ease-in-out"
-              onClick={handleGoogleSignIn}
+              onClick={handleGoogleLogin}
             >
               <FaGoogle className="mr-2" /> Sign in with Google
             </Button>
