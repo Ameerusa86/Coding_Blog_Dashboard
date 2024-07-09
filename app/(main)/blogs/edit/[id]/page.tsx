@@ -29,7 +29,7 @@ const formSchema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
   body: z.string().min(1, { message: "Body is required" }),
   author: z.string().min(1, { message: "Author is required" }),
-  date: z.string().min(1, { message: "Date is required" }),
+  updatedAt: z.string().min(1, { message: "Updated date is required" }),
 });
 
 interface BlogEditPageProps {
@@ -71,13 +71,18 @@ const BlogEditPage = ({ params }: BlogEditPageProps) => {
       title: post?.title || "",
       body: post?.body || "",
       author: post?.author || "",
-      date: post?.date || "",
+      updatedAt: post ? new Date().toISOString().split("T")[0] : "",
     },
   });
 
   useEffect(() => {
     if (post) {
-      form.reset(post);
+      form.reset({
+        title: post.title,
+        body: post.body,
+        author: post.author,
+        updatedAt: new Date().toISOString().split("T")[0],
+      });
     }
   }, [post, form]);
 
@@ -85,10 +90,10 @@ const BlogEditPage = ({ params }: BlogEditPageProps) => {
     if (!post) return;
     try {
       const postDoc = doc(db, "blogs", post.id);
-      await updateDoc(postDoc, data);
+      await updateDoc(postDoc, { ...data, updatedAt: new Date() });
       toast({
         title: "Blog updated successfully",
-        description: `Updated by ${data.author} on ${data.date}`,
+        description: `Updated by ${data.author} on ${data.updatedAt}`,
       });
       router.push("/blogs");
     } catch (error) {
@@ -175,11 +180,11 @@ const BlogEditPage = ({ params }: BlogEditPageProps) => {
 
           <FormField
             control={form.control}
-            name="date"
+            name="updatedAt"
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="flex items-center uppercase text-xs font-bold text-zinc-500 dark:text-white">
-                  Date
+                  Updated Date
                   <button
                     type="button"
                     onClick={() =>
@@ -193,7 +198,7 @@ const BlogEditPage = ({ params }: BlogEditPageProps) => {
                   <DatePicker
                     className="w-full px-4 py-2 rounded bg-slate-100 dark:bg-slate-500 border-0 text-black dark:text-white"
                     selected={field.value ? new Date(field.value) : null}
-                    onChange={(date) =>
+                    onChange={(date: Date | null) =>
                       field.onChange(
                         date ? date.toISOString().split("T")[0] : ""
                       )
