@@ -4,7 +4,7 @@
 
 This is an admin dashboard UI built with Next.js. It serves as the front-end interface, utilizing static files for data. Feel free to extend it into a full-stack project.
 
-[Demo][https://coding-blog-dashboard.vercel.app/]
+[Demo](https://coding-blog-dashboard.vercel.app/)
 
 ## Packages Used
 
