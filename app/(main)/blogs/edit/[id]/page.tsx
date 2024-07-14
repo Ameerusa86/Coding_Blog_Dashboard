@@ -17,13 +17,17 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Blog } from "@/types/blogs";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { FaCalendarAlt } from "react-icons/fa"; // Import calendar icon
+import dynamic from "next/dynamic";
+import "react-quill/dist/quill.snow.css";
+
+// Dynamically import ReactQuill to avoid SSR issues
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 const formSchema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
@@ -112,6 +116,36 @@ const BlogEditPage = ({ params }: BlogEditPageProps) => {
     return <p>{error}</p>;
   }
 
+  const modules = {
+    toolbar: [
+      [{ header: "1" }, { header: "2" }],
+      [{ font: [""] }],
+      [{ size: [""] }],
+      ["bold", "italic", "underline", "strike", "blockquote"],
+      [{ list: "ordered" }, { list: "bullet" }],
+      ["link", "image", "video"],
+      ["clean"],
+      [{ align: [""] }],
+    ],
+  };
+
+  const formats = [
+    "header",
+    "font",
+    "size",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "blockquote",
+    "list",
+    "bullet",
+    "link",
+    "image",
+    "video",
+    "align",
+  ];
+
   return (
     <>
       <BackButton text="Back To Blogs" link="/blogs" />
@@ -147,10 +181,12 @@ const BlogEditPage = ({ params }: BlogEditPageProps) => {
                   Body
                 </FormLabel>
                 <FormControl>
-                  <Textarea
+                  <ReactQuill
+                    value={field.value}
+                    onChange={field.onChange}
+                    modules={modules}
+                    formats={formats}
                     className="bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0"
-                    placeholder="Enter Body"
-                    {...field}
                   />
                 </FormControl>
                 <FormMessage />
