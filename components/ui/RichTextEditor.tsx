@@ -14,7 +14,8 @@ const modules = {
     [{ list: "ordered" }, { list: "bullet" }],
     ["link", "image", "video"],
     ["clean"],
-    [{ align: [] } as { align: string[] }],
+    [{ align: ["center", "right", "justify"] } as { align: string[] }],
+    ["code-block"],
   ],
   clipboard: {
     matchVisual: false,

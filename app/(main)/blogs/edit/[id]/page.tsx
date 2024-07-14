@@ -119,13 +119,14 @@ const BlogEditPage = ({ params }: BlogEditPageProps) => {
   const modules = {
     toolbar: [
       [{ header: "1" }, { header: "2" }],
-      [{ font: [""] }],
-      [{ size: [""] }],
+      [{ font: [] as string[] }],
+      [{ size: [] as string[] }],
       ["bold", "italic", "underline", "strike", "blockquote"],
       [{ list: "ordered" }, { list: "bullet" }],
       ["link", "image", "video"],
+      ["code-block"],
+      [{ align: [] as string[] }],
       ["clean"],
-      [{ align: [""] }],
     ],
   };
 
@@ -143,6 +144,7 @@ const BlogEditPage = ({ params }: BlogEditPageProps) => {
     "link",
     "image",
     "video",
+    "code-block",
     "align",
   ];
 
