@@ -16,24 +16,26 @@ interface BlogFormData {
   slug: string;
   description: string;
   author: string;
+  mainImage: File | null;
   category: string;
   technologies: string[];
   githubLink: string;
-  image: File | null;
-  createdAt?: string;
+  publishedAt?: string;
+  body: string;
 }
 
-const NewBlogForm = () => {
+const NewBlogForm: React.FC = () => {
   const [blogData, setBlogData] = useState<BlogFormData>({
     title: "",
     slug: "",
     description: "",
     author: "",
+    mainImage: null,
     category: "",
     technologies: [],
     githubLink: "",
-    image: null,
-    createdAt: new Date().toISOString(),
+    publishedAt: new Date().toISOString(),
+    body: "",
   });
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -43,7 +45,7 @@ const NewBlogForm = () => {
     setLoading(true);
 
     try {
-      await CreateNewBlog(blogData, blogData.image!);
+      await CreateNewBlog(blogData, blogData.mainImage!);
       toast.success(
         `Blog created successfully by ${
           blogData.author
@@ -54,11 +56,12 @@ const NewBlogForm = () => {
         slug: "",
         description: "",
         author: "",
+        mainImage: null,
         category: "",
         technologies: [],
         githubLink: "",
-        image: null,
-        createdAt: new Date().toISOString(),
+        publishedAt: new Date().toISOString(),
+        body: "",
       });
       router.push("/blogs");
     } catch (error) {
@@ -72,7 +75,7 @@ const NewBlogForm = () => {
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      setBlogData({ ...blogData, image: file });
+      setBlogData({ ...blogData, mainImage: file });
     }
   };
 
@@ -159,44 +162,52 @@ const NewBlogForm = () => {
               className="w-full px-4 py-2 rounded border focus:outline-none focus:ring focus:border-blue-300"
             />
           </div>
-          <div className="flex flex-col sm:flex-row sm:space-x-4">
-            <div className="w-full sm:w-1/2">
-              <label htmlFor="category" className="block mb-1 font-semibold">
-                Category:
-              </label>
-              <select
-                id="category"
-                value={blogData.category}
-                onChange={(e) =>
-                  setBlogData({ ...blogData, category: e.target.value })
-                }
-                required
-                className="w-full px-4 py-2 rounded border focus:outline-none focus:ring focus:border-blue-300"
-              >
-                <option value="">Select category</option>
-                <option value="FrontEnd">Front End</option>
-                <option value="BackEnd">Back End</option>
-                <option value="FullStack">Full Stack</option>
-                <option value="Python">Python</option>
-                <option value="DataAnalytics">Data Analytics</option>
-                <option value="RESTAPI">REST API</option>
-              </select>
-            </div>
-            <div className="w-full sm:w-1/2">
-              <label htmlFor="githubLink" className="block mb-1 font-semibold">
-                GitHub Link:
-              </label>
-              <input
-                type="text"
-                id="githubLink"
-                value={blogData.githubLink}
-                onChange={(e) =>
-                  setBlogData({ ...blogData, githubLink: e.target.value })
-                }
-                required
-                className="w-full px-4 py-2 rounded border focus:outline-none focus:ring focus:border-blue-300"
-              />
-            </div>
+          <div>
+            <label htmlFor="body" className="block mb-1 font-semibold">
+              Body:
+            </label>
+            <RichTextEditor
+              id="body"
+              value={blogData.body}
+              onChange={(value) =>
+                setBlogData((prevData) => ({ ...prevData, body: value }))
+              }
+              required
+              className="w-full px-4 py-2 rounded border focus:outline-none focus:ring focus:border-blue-300"
+            />
+          </div>
+          <div>
+            <label htmlFor="mainImage" className="block mb-1 font-semibold">
+              Main Image:
+            </label>
+            <input
+              type="file"
+              id="mainImage"
+              accept="image/*"
+              onChange={handleImageChange}
+              required
+              className="w-full px-4 py-2 rounded border focus:outline-none focus:ring focus:border-blue-300"
+            />
+          </div>
+          <div>
+            <label className="block mb-1 font-semibold">Category:</label>
+            <select
+              id="category"
+              value={blogData.category}
+              onChange={(e) =>
+                setBlogData({ ...blogData, category: e.target.value })
+              }
+              required
+              className="w-full px-4 py-2 rounded border focus:outline-none focus:ring focus:border-blue-300"
+            >
+              <option value="">Select category</option>
+              <option value="FrontEnd">Front End</option>
+              <option value="BackEnd">Back End</option>
+              <option value="FullStack">Full Stack</option>
+              <option value="Python">Python</option>
+              <option value="DataAnalytics">Data Analytics</option>
+              <option value="RESTAPI">REST API</option>
+            </select>
           </div>
           <div>
             <label className="block mb-1 font-semibold">Technologies:</label>
@@ -215,14 +226,16 @@ const NewBlogForm = () => {
             </div>
           </div>
           <div>
-            <label htmlFor="image" className="block mb-1 font-semibold">
-              Image:
+            <label htmlFor="githubLink" className="block mb-1 font-semibold">
+              GitHub Link:
             </label>
             <input
-              type="file"
-              id="image"
-              accept="image/*"
-              onChange={handleImageChange}
+              type="text"
+              id="githubLink"
+              value={blogData.githubLink}
+              onChange={(e) =>
+                setBlogData({ ...blogData, githubLink: e.target.value })
+              }
               required
               className="w-full px-4 py-2 rounded border focus:outline-none focus:ring focus:border-blue-300"
             />
