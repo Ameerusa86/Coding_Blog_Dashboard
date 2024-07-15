@@ -6,10 +6,9 @@ import { CreateNewBlog } from "@/app/api/blog/createBlog";
 import { Toaster, toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
-// Dynamically import the rich text editor to avoid SSR issues
-const RichTextEditor = dynamic(() => import("@/components/ui/RichTextEditor"), {
-  ssr: false,
-});
+// Dynamically import ReactQuill to avoid SSR issues
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+import "react-quill/dist/quill.snow.css";
 
 interface BlogFormData {
   title: string;
@@ -23,6 +22,37 @@ interface BlogFormData {
   publishedAt?: string;
   body: string;
 }
+
+const modules = {
+  toolbar: [
+    [{ header: "1" }, { header: "2" }, { font: [] as string[] }],
+    [{ size: [] as string[] }],
+    ["bold", "italic", "underline", "strike", "blockquote"],
+    [{ list: "ordered" }, { list: "bullet" }],
+    ["link", "image", "video"],
+    ["code-block"],
+    [{ align: [] as string[] }],
+    ["clean"],
+  ],
+};
+
+const formats = [
+  "header",
+  "font",
+  "size",
+  "bold",
+  "italic",
+  "underline",
+  "strike",
+  "blockquote",
+  "list",
+  "bullet",
+  "link",
+  "image",
+  "video",
+  "code-block",
+  "align",
+];
 
 const NewBlogForm: React.FC = () => {
   const [blogData, setBlogData] = useState<BlogFormData>({
@@ -137,13 +167,14 @@ const NewBlogForm: React.FC = () => {
             <label htmlFor="description" className="block mb-1 font-semibold">
               Description:
             </label>
-            <RichTextEditor
+            <ReactQuill
               id="description"
               value={blogData.description}
               onChange={(value) =>
                 setBlogData((prevData) => ({ ...prevData, description: value }))
               }
-              required
+              modules={modules}
+              formats={formats}
               className="w-full px-4 py-2 rounded border focus:outline-none focus:ring focus:border-blue-300"
             />
           </div>
@@ -158,7 +189,6 @@ const NewBlogForm: React.FC = () => {
               onChange={(e) =>
                 setBlogData({ ...blogData, author: e.target.value })
               }
-              required
               className="w-full px-4 py-2 rounded border focus:outline-none focus:ring focus:border-blue-300"
             />
           </div>
@@ -166,13 +196,14 @@ const NewBlogForm: React.FC = () => {
             <label htmlFor="body" className="block mb-1 font-semibold">
               Body:
             </label>
-            <RichTextEditor
+            <ReactQuill
               id="body"
               value={blogData.body}
               onChange={(value) =>
                 setBlogData((prevData) => ({ ...prevData, body: value }))
               }
-              required
+              modules={modules}
+              formats={formats}
               className="w-full px-4 py-2 rounded border focus:outline-none focus:ring focus:border-blue-300"
             />
           </div>
